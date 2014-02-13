@@ -21,6 +21,8 @@
 		C9372C6718AAD2C700D37C95 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9372C4918AAD2C700D37C95 /* UIKit.framework */; };
 		C9372C6F18AAD2C700D37C95 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C9372C6D18AAD2C700D37C95 /* InfoPlist.strings */; };
 		C9372C7118AAD2C700D37C95 /* MathletesTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C9372C7018AAD2C700D37C95 /* MathletesTestTests.m */; };
+		C9372C7C18AB08EB00D37C95 /* GridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9372C7B18AB08EB00D37C95 /* GridViewController.m */; };
+		C9372C7F18ABF06C00D37C95 /* MathProblem.m in Sources */ = {isa = PBXBuildFile; fileRef = C9372C7E18ABF06C00D37C95 /* MathProblem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,10 @@
 		C9372C6C18AAD2C700D37C95 /* MathletesTestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MathletesTestTests-Info.plist"; sourceTree = "<group>"; };
 		C9372C6E18AAD2C700D37C95 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C9372C7018AAD2C700D37C95 /* MathletesTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MathletesTestTests.m; sourceTree = "<group>"; };
+		C9372C7A18AB08EB00D37C95 /* GridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridViewController.h; sourceTree = "<group>"; };
+		C9372C7B18AB08EB00D37C95 /* GridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridViewController.m; sourceTree = "<group>"; };
+		C9372C7D18ABF06C00D37C95 /* MathProblem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathProblem.h; sourceTree = "<group>"; };
+		C9372C7E18ABF06C00D37C95 /* MathProblem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MathProblem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +123,10 @@
 				C9372C5718AAD2C700D37C95 /* Main.storyboard */,
 				C9372C5A18AAD2C700D37C95 /* ViewController.h */,
 				C9372C5B18AAD2C700D37C95 /* ViewController.m */,
+				C9372C7A18AB08EB00D37C95 /* GridViewController.h */,
+				C9372C7B18AB08EB00D37C95 /* GridViewController.m */,
+				C9372C7D18ABF06C00D37C95 /* MathProblem.h */,
+				C9372C7E18ABF06C00D37C95 /* MathProblem.m */,
 				C9372C5D18AAD2C700D37C95 /* Images.xcassets */,
 				C9372C4C18AAD2C700D37C95 /* Supporting Files */,
 			);
@@ -249,7 +259,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9372C7C18AB08EB00D37C95 /* GridViewController.m in Sources */,
 				C9372C5C18AAD2C700D37C95 /* ViewController.m in Sources */,
+				C9372C7F18ABF06C00D37C95 /* MathProblem.m in Sources */,
 				C9372C5618AAD2C700D37C95 /* AppDelegate.m in Sources */,
 				C9372C5218AAD2C700D37C95 /* main.m in Sources */,
 			);

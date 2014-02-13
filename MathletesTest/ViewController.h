@@ -10,4 +10,9 @@
 
 @interface ViewController : UIViewController
 
+@property int addend1, addend2;
+@property int cardValue;
+@property NSMutableArray *userArray;
+@property NSMutableArray *sortedProblems;
+
 @end
