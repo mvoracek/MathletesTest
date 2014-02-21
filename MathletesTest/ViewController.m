@@ -10,13 +10,15 @@
 #import "GridViewController.h"
 #import "MathProblem.h"
 
-@interface ViewController ()
+@interface ViewController () <PFSignUpViewControllerDelegate>
 {
     NSMutableArray *mathProblems;
     NSInteger difficulty;
-    NSInteger key;
-    NSInteger keytwo;
+    NSInteger userArrayKey;
+    NSInteger firstNonZeroKey;
     int keyAddend;
+    NSInteger numkey;
+    NSString *newkey;
 }
 
 @property (weak, nonatomic) IBOutlet UILabel *varLabel1;
@@ -35,9 +37,63 @@
 {
     [super viewDidLoad];
     
-    [self cardDifficulty];
+    if ([PFUser currentUser])
+    {
+        PFQuery *query = [PFQuery queryWithClassName:@"MathProblem"];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error)
+        {
+            _userArray = (NSMutableArray *)objects;
+            
+            for (int i = 0; i < _userArray.count; i++)
+            {
+                MathProblem *problem = _userArray[i];
+                NSLog(@"%i %i %ld",problem.firstValue, problem.secondValue, (long)problem.equationDifficulty);
+            }
+            
+            [self newMathProblem];
+        }];
+        /*
+        [query getObjectInBackgroundWithId:@"mathArray" block:^(PFObject *object, NSError *error)
+         {
+             _userArray = (NSMutableArray *)object;
+             
+             for (int i = 0; i < _userArray.count; i++)
+             {
+                 MathProblem *problem = _userArray[i];
+                 NSLog(@"%i %ld",problem.mathProblemValue, (long)problem.equationDifficulty);
+             }
+         }];
+        */
+    }
     
-    _userArray = mathProblems;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    if (![PFUser currentUser])
+    {
+        PFLogInViewController *login = [PFLogInViewController new];
+        UILabel *label = [[ UILabel alloc]initWithFrame:CGRectZero];
+        login.signUpController.delegate = self;
+        label.text = @"Mathletes Tester";
+        [label sizeToFit];
+        login.logInView.logo = label;
+        [self presentViewController:login animated:YES completion:nil];
+
+    }
+    
+}
+
+-(void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user
+{
+    _userArray = [self cardDifficulty];
+
+    [_userArray enumerateObjectsUsingBlock:^(MathProblem *obj, NSUInteger idx, BOOL *stop)
+    {
+        [obj saveInBackground];
+    }];
+    
+    [signUpController dismissViewControllerAnimated:YES completion:nil];
     
     [self newMathProblem];
 }
@@ -66,9 +122,12 @@
 
 - (IBAction)onGoButtonPressed:(id)sender
 {
-    if (_userArray[key])
+    if (!_userArray.count)
+        return;
+    
+    if (_userArray[userArrayKey])
     {
-        MathProblem *problem = _userArray[key];
+        MathProblem *problem = _userArray[userArrayKey];
         NSInteger proficiencyChange = problem.equationDifficulty;
         if (_answerTextField.text.intValue == _answerLabel.text.intValue)
         {
@@ -88,7 +147,12 @@
         problem.equationDifficulty = proficiencyChange;
         problem.haveAttemptedEquation = YES;
         
-        NSLog(@"%i %i", problem.mathProblemValue, problem.equationDifficulty);
+        NSLog(@"%i %i %i", problem.firstValue, problem.secondValue, problem.equationDifficulty);
+        
+        [_userArray enumerateObjectsUsingBlock:^(MathProblem *obj, NSUInteger idx, BOOL *stop)
+         {
+             [obj saveInBackground];
+         }];
     }
     
     _answerTextField.text = nil;
@@ -96,65 +160,63 @@
     [self newMathProblem];
 }
 
--(void)randomMathProblem
-{
-    _addend1 = arc4random()%10;
-    _addend2 = arc4random()%10;
-}
-
--(void)newMathLogic
-{
-    //max stuff
-    /*
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    
-    [_userArray enumerateKeysAndObjectsUsingBlock:^(NSNumber *questionIndex, MathProblem *mp, BOOL *stop) {
-        NSNumber *newkey = @(mp.equationDifficulty);
-        if (!dict[newkey])
-            dict[newkey] = [NSMutableArray new];
-        else
-            [dict[newkey] addObject:@[questionIndex, mp]];
-    }];
-    */
-    [self randomMathProblem];
-    
-    MathProblem *mp = _userArray[key];
-    
-    if (mp.equationDifficulty == 0)
-    {
-        [self randomMathProblem];
-        
-    }
-
-    [self newMathProblem];
-    //my stuff
-    
-    /*
-    NSMutableArray *unsortedArray = [NSMutableArray new];
-    
-    for (MathProblem *mp in _userArray)
-    {
-        [unsortedArray addObject:(mp)];
-    }
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
-    _sortedProblems = [unsortedArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    for (int i = 0; i < _sortedProblems.count; i++)
-    {
-        NSLog(@"%@",_sortedProblems[i]);
-    }
-    */
-    
-    
-    //NSString *combinedString = [NSString stringWithFormat:@"%i%i",_addend1,_addend2];
-    //NSNumber *key = @(combinedString.intValue);
-
-
-}
-
 -(void)sortingArray
 {
+    /*
+    //sean's stuff
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"equationDifficulty" ascending:YES];
+    
+    _userArray = [_userArray sortedArrayUsingDescriptors:@[sortDescriptor]];
+    
+    NSIndexSet *indexes = [_userArray indexesOfObjectsPassingTest:^BOOL(MathProblem *prob, NSUInteger idx, BOOL *stop) {
+        if (prob.equationDifficulty > 0)
+        {
+            *stop = YES;
+            return NO;
+        }
+        return YES;
+    }];
+    firstNonZeroKey = [indexes count] - 1;
+    */
+
+//    NSIndexSet *indexes = [_userArray indexesOfObjectsPassingTest:^BOOL(MathProblem *prob, NSUInteger idx, BOOL *stop) {
+//        if (prob.equationDifficulty > 0)
+//        {
+//            NSLog(@"%i", firstNonZeroKey);
+//            *stop = YES;
+//            return YES;
+//        }
+//        return NO;
+//    }];
+//    firstNonZeroKey = [indexes firstIndex];
+    
+        //my stuff
+//    for (MathProblem *prob in _userArray) {
+//        if (prob.equationDifficulty > 0)
+//        {
+//            firstNonZeroKey = [_userArray indexOfObject:prob];
+//            NSLog(@"%i", firstNonZeroKey);
+//            break;
+//        }
+//    }
+//    
+//    for (int i = 0; i < 100; i++)
+//    {
+//        MathProblem *mp2 = _userArray[i];
+//        if (mp2.equationDifficulty > 0)
+//        {
+//            firstNonZeroKey = i;
+//            NSLog(@"%i", firstNonZeroKey);
+//            break;
+//        }
+//    }
+//    
+//    for (int i = 0; i < _userArray.count; i++)
+//    {
+//        MathProblem *problem = _userArray[i];
+//        NSLog(@"%i %ld",problem.mathProblemValue, (long)problem.equationDifficulty);
+//    }
+    
     NSMutableArray *sortingArray = [NSMutableArray new];
     
     for (MathProblem *mp in _userArray)
@@ -165,14 +227,13 @@
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"equationDifficulty" ascending:YES];
     _userArray = [sortingArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     
-    
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < _userArray.count; i++)
     {
         MathProblem *mp2 = _userArray[i];
         if (mp2.equationDifficulty > 0)
         {
-            keytwo = i;
-            NSLog(@"%i", keytwo);
+            firstNonZeroKey = i;
+            NSLog(@"%li", (long)firstNonZeroKey);
             break;
         }
     }
@@ -180,56 +241,70 @@
     for (int i = 0; i < _userArray.count; i++)
     {
         MathProblem *problem = _userArray[i];
-        NSLog(@"%i %ld",problem.mathProblemValue, (long)problem.equationDifficulty);
+        NSLog(@"%i %i %ld",problem.firstValue, problem.secondValue, (long)problem.equationDifficulty);
     }
-    
 }
 
--(void)newMathProblem
+-(void)setNewKey
 {
-    [self sortingArray];
-    
-    _addend1 = arc4random()%10;
-    _addend2 = arc4random()%10;
-    
-    NSInteger numkey;
-    NSString *newkey;
-    
     [_combinedLabel setText:[NSString stringWithFormat:@"%i%i",_addend1,_addend2]];
     newkey = _combinedLabel.text;
     numkey = newkey.intValue;
+
+//    userArrayKey = [_userArray indexOfObjectPassingTest:^BOOL(MathProblem *problem, NSUInteger idx, BOOL *stop) {
+//        if (numkey == problem.mathProblemValue)
+//        {
+//            difficulty = problem.equationDifficulty;
+//            return YES;
+//        }
+//        return NO;
+//    }];
     
     [_userArray enumerateObjectsUsingBlock:^(MathProblem *problem, NSUInteger idx, BOOL *stop)
      {
          if (numkey == problem.mathProblemValue)
          {
              difficulty = problem.equationDifficulty;
-             key = idx;
+             userArrayKey = idx;
+             *stop = YES;
          }
      }];
+}
+
+-(void)newMathProblem
+{
+    [self sortingArray];
     
+    //original random value
+    _addend1 = arc4random()%10;
+    _addend2 = arc4random()%10;
+    
+    [self setNewKey];
+    
+    //setting pool of possible problems
     keyAddend = 40;
     
-    if (keytwo > 35)
+    if (firstNonZeroKey > 35)
     {
         keyAddend = 30;
         
-        if (keytwo > 50)
+        if (firstNonZeroKey > 50)
         {
             keyAddend = 25;
             
-            if (keytwo > 80)
+            if (firstNonZeroKey > 80)
             {
-                keyAddend = 20;
+                keyAddend = 100 - firstNonZeroKey;
+                
             }
         }
     }
     
-    if (key < keytwo || key > (keytwo + keyAddend))
+    //rechoosing problem if proficiency is reached
+    if (userArrayKey < firstNonZeroKey || userArrayKey > (firstNonZeroKey + keyAddend))
     {
-        //[self newMathProblem];
-        
-        if (keytwo > 80)
+        //allowing for old problems when there is a pool < 20
+        if (firstNonZeroKey > 80)
         {
             int chanceOfOldProblem = arc4random()%4;
             
@@ -237,20 +312,8 @@
             {
                 _addend1 = arc4random()%4 + 4;
                 _addend2 = arc4random()%4 + 4;
-                [_combinedLabel setText:[NSString stringWithFormat:@"%i%i",_addend1,_addend2]];
                 
-                newkey = _combinedLabel.text;
-                numkey = newkey.intValue;
-                
-                [_userArray enumerateObjectsUsingBlock:^(MathProblem *problem, NSUInteger idx, BOOL *stop)
-                 {
-                     if (numkey == problem.mathProblemValue)
-                     {
-                         difficulty = problem.equationDifficulty;
-                         key = idx;
-                     }
-                 }];
-                
+                [self setNewKey];
             }
             else
             {
@@ -272,9 +335,10 @@
     
 }
 
--(void)cardDifficulty
+-(NSMutableArray *)cardDifficulty
 {
-    mathProblems = @[         [[MathProblem alloc]initWithDifficulty:2 forProblem:0],
+    return  @[                [[MathProblem alloc]initWithDifficulty:2
+                                  forProblem:0],
                               [[MathProblem alloc]initWithDifficulty:2 forProblem:1],
                               [[MathProblem alloc]initWithDifficulty:2 forProblem:10],
                               [[MathProblem alloc]initWithDifficulty:2 forProblem:11],
@@ -377,6 +441,111 @@
                               ].mutableCopy;
 }
 
+-(NSMutableArray *)subtractionDifficulty
+{
+    return  @[                [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:0 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:1 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:1 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:2 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:2 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:2 forSecondValue:2],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:3 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:3 forSecondValue:3],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:3 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:3 forSecondValue:2],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:4 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:4 forSecondValue:4],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:4 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:4 forSecondValue:3],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:4 forSecondValue:2],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:5 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:5 forSecondValue:5],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:5 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:5 forSecondValue:4],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:6 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:6 forSecondValue:6],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:6 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:6 forSecondValue:5],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:7 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:7 forSecondValue:7],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:7 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:7 forSecondValue:6],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:8 forSecondValue:7],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:8 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:8 forSecondValue:8],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:9 forSecondValue:8],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:9 forSecondValue:0],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:9 forSecondValue:9],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:8 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:9 forSecondValue:1],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:5 forSecondValue:2],
+                              [[MathProblem alloc]initWithDifficulty:2 ofProblemType:1 forFirstValue:5 forSecondValue:3],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:62 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:64 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:63 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:101 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:72 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:82 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:73 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:2 forProblem:109 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:92 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:97 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:102 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:112 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:75 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:85 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:95 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:105 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:83 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:93 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:86 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:96 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:103 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:113 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:123 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:74 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:84 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:94 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:104 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:108 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:4 forProblem:119 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:114 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:124 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:134 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:115 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:125 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:135 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:145 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:106 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:116 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:126 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:136 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:146 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:156 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:107 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:117 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:127 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:137 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:147 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:157 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:167 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:118 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:128 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:138 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:148 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:158 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:168 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:178 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:6 forProblem:129 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:139 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:149 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:159 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:169 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:179 ofProblemType:1],
+                              [[MathProblem alloc]initWithDifficulty:8 forProblem:189 ofProblemType:1]
+                              ].mutableCopy;
+    
+}
 
 
 

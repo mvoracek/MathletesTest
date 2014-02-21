@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C91C286C18B3D825002D9275 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C286B18B3D824002D9275 /* Parse.framework */; };
+		C91C286E18B3D89F002D9275 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C286D18B3D89F002D9275 /* AudioToolbox.framework */; };
+		C91C287718B3D8E6002D9275 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C286F18B3D8E6002D9275 /* CFNetwork.framework */; };
+		C91C287818B3D8E6002D9275 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C287018B3D8E6002D9275 /* CoreLocation.framework */; };
+		C91C287918B3D8E6002D9275 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C287118B3D8E6002D9275 /* libz.dylib */; };
+		C91C287A18B3D8E6002D9275 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C287218B3D8E6002D9275 /* MobileCoreServices.framework */; };
+		C91C287B18B3D8E6002D9275 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C287318B3D8E6002D9275 /* QuartzCore.framework */; };
+		C91C287C18B3D8E6002D9275 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C287418B3D8E6002D9275 /* Security.framework */; };
+		C91C287D18B3D8E6002D9275 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C287518B3D8E6002D9275 /* StoreKit.framework */; };
+		C91C287E18B3D8E6002D9275 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C91C287618B3D8E6002D9275 /* SystemConfiguration.framework */; };
 		C9372C4618AAD2C700D37C95 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9372C4518AAD2C700D37C95 /* Foundation.framework */; };
 		C9372C4818AAD2C700D37C95 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9372C4718AAD2C700D37C95 /* CoreGraphics.framework */; };
 		C9372C4A18AAD2C700D37C95 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9372C4918AAD2C700D37C95 /* UIKit.framework */; };
@@ -36,6 +46,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C91C286B18B3D824002D9275 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		C91C286D18B3D89F002D9275 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		C91C286F18B3D8E6002D9275 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		C91C287018B3D8E6002D9275 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		C91C287118B3D8E6002D9275 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		C91C287218B3D8E6002D9275 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		C91C287318B3D8E6002D9275 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C91C287418B3D8E6002D9275 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C91C287518B3D8E6002D9275 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		C91C287618B3D8E6002D9275 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C9372C4218AAD2C700D37C95 /* MathletesTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathletesTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9372C4518AAD2C700D37C95 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C9372C4718AAD2C700D37C95 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -66,8 +86,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C91C287718B3D8E6002D9275 /* CFNetwork.framework in Frameworks */,
+				C91C287818B3D8E6002D9275 /* CoreLocation.framework in Frameworks */,
+				C91C287918B3D8E6002D9275 /* libz.dylib in Frameworks */,
+				C91C287A18B3D8E6002D9275 /* MobileCoreServices.framework in Frameworks */,
+				C91C287B18B3D8E6002D9275 /* QuartzCore.framework in Frameworks */,
+				C91C287C18B3D8E6002D9275 /* Security.framework in Frameworks */,
+				C91C287D18B3D8E6002D9275 /* StoreKit.framework in Frameworks */,
+				C91C287E18B3D8E6002D9275 /* SystemConfiguration.framework in Frameworks */,
 				C9372C4818AAD2C700D37C95 /* CoreGraphics.framework in Frameworks */,
+				C91C286E18B3D89F002D9275 /* AudioToolbox.framework in Frameworks */,
 				C9372C4A18AAD2C700D37C95 /* UIKit.framework in Frameworks */,
+				C91C286C18B3D825002D9275 /* Parse.framework in Frameworks */,
 				C9372C4618AAD2C700D37C95 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,6 +137,16 @@
 		C9372C4418AAD2C700D37C95 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C91C286F18B3D8E6002D9275 /* CFNetwork.framework */,
+				C91C287018B3D8E6002D9275 /* CoreLocation.framework */,
+				C91C287118B3D8E6002D9275 /* libz.dylib */,
+				C91C287218B3D8E6002D9275 /* MobileCoreServices.framework */,
+				C91C287318B3D8E6002D9275 /* QuartzCore.framework */,
+				C91C287418B3D8E6002D9275 /* Security.framework */,
+				C91C287518B3D8E6002D9275 /* StoreKit.framework */,
+				C91C287618B3D8E6002D9275 /* SystemConfiguration.framework */,
+				C91C286D18B3D89F002D9275 /* AudioToolbox.framework */,
+				C91C286B18B3D824002D9275 /* Parse.framework */,
 				C9372C4518AAD2C700D37C95 /* Foundation.framework */,
 				C9372C4718AAD2C700D37C95 /* CoreGraphics.framework */,
 				C9372C4918AAD2C700D37C95 /* UIKit.framework */,
@@ -390,6 +430,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/Matt/Documents/MobileMakers/MathletesTest,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MathletesTest/MathletesTest-Prefix.pch";
 				INFOPLIST_FILE = "MathletesTest/MathletesTest-Info.plist";
@@ -403,6 +447,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/Matt/Documents/MobileMakers/MathletesTest,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MathletesTest/MathletesTest-Prefix.pch";
 				INFOPLIST_FILE = "MathletesTest/MathletesTest-Info.plist";
@@ -472,6 +520,7 @@
 				C9372C7618AAD2C700D37C95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C9372C7718AAD2C700D37C95 /* Build configuration list for PBXNativeTarget "MathletesTestTests" */ = {
 			isa = XCConfigurationList;
@@ -480,6 +529,7 @@
 				C9372C7918AAD2C700D37C95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

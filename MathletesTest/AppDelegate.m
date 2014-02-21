@@ -7,11 +7,17 @@
 //
 
 #import "AppDelegate.h"
+#import "MathProblem.h"
+#import <Parse/Parse.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [MathProblem registerSubclass];
+    
+    [Parse setApplicationId:@"6XyWRCNa4tZzW3p17GWxSfuZANJefNMmenpHaMUd"
+                  clientKey:@"iPG39TdhZaywmO9F6IxLCfIn9wOBwAO9bVcpkB4R"];
     // Override point for customization after application launch.
     return YES;
 }

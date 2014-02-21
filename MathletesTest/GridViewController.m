@@ -50,6 +50,7 @@
             
             //set values
             
+            /*
             [gridLabel setText:[NSString stringWithFormat:@"%d+%d",i, j]];
             
             NSString *newkey = [NSString stringWithFormat:@"%d%d",i, j];
@@ -63,7 +64,7 @@
                      key = idx;
                  }
              }];
-            
+            */
             
             MathProblem *mp = _gridArray[key];
             difficulty = mp.equationDifficulty;
